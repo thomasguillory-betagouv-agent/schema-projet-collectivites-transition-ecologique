@@ -6,44 +6,62 @@ Ce dépôt contient les schémas de données standardisés pour décrire les pro
 
 Ce schéma permet de structurer les données relatives aux projets de collectivités en lien avec la transition écologique. Il facilite le partage, l'analyse et la valorisation de ces données entre différents services numériques de l'État français et les collectivités territoriales.
 
-## Structure du schéma
+Le modèle est organisé en 4 objets hiérarchiques : **Plan → Action → Opération → Financement**.
 
-Le schéma est organisé en deux tables principales et deux référentiels :
+## Structure du schéma
 
 ### Tables principales
 
-1. **Projets** : Décrit les projets de transition écologique avec leurs caractéristiques (identifiant, nom, description, budget, planning, phase, etc.)
-2. **Collectivités** : Décrit les collectivités territoriales (communes, EPCI) qui portent ces projets
+| Table | Description | Champs |
+|-------|-------------|--------|
+| **[Plans](plans/)** | Documents stratégiques définissant des orientations sur un horizon temporel (PCAET, CRTE, PAT, PLUi…) | 8 |
+| **[Actions](actions/)** | Intentions politiques décrivant ce qu'une collectivité envisage d'entreprendre (objet optionnel) | 11 |
+| **[Opérations](operations/)** | Projets concrets avec moyens engagés, acteurs identifiés, calendrier et livrables | 19 |
+| **[Financements](financements/)** | Lignes de financement associées aux opérations (N financements par opération) | 9 |
 
 ### Référentiels
 
-Les référentiels sont disponibles ici : https://github.com/betagouv/schema-projet-collectivites-transition-ecologique/tree/main/reference-data
+Les référentiels sont disponibles dans [`reference-data/`](reference-data/) :
 
-1. **Référentiel des compétences M57** : Liste hiérarchique des compétences et sous-compétences des collectivités selon la nomenclature M57. Les compétences ont un code du type : 90-XY, et les sous-compétences 90-XYZ
-- Le fichier JSON reprend la structure compétences et sous-compétences associées (lorsqu'il y en a), via une liste d'objets : 
-`{"code": "90-XY",
- "nom": "compétence ABC",
-"sous_competences": [{"code" : "90-XYZ", "nom" : "sous-compétence ABCD"},{}]}`
-- tandis que le fichier csv contient une colonne code, et une colonne competence-sous-competence correspondant à leur intitulé.  
-2. **Référentiel des leviers de transition écologique** : Liste des leviers SGPE disponibles et leur description pour les projets de transition écologique. Il s'agit d'un fichier csv avec 2 colonnes : `levier` et `description`
+**Contraignants** (foreign key validée) :
 
-Ces référentiels sont utilisés pour catégoriser et standardiser les données des projets.
+| Référentiel | Entrées | Description |
+|-------------|---------|-------------|
+| [Leviers SGPE](reference-data/referentiel-leviers-sgpe.csv) | 72 | Leviers d'action de la planification écologique |
+| [Compétences M57](reference-data/referentiel-competences-m57.csv) | 156 | Nomenclature fonctionnelle M57 des collectivités |
+| [Classification — Thématiques](reference-data/referentiel-classification-thematiques.csv) | 138 | Domaines thématiques (énergie, biodiversité, mobilité…) |
+| [Classification — Infrastructures](reference-data/referentiel-classification-infrastructures.csv) | 59 | Types d'infrastructure ou de site |
+| [Classification — Interventions](reference-data/referentiel-classification-interventions.csv) | 15 | Types d'intervention (rénovation, construction…) |
+
+**Indicatifs** (texte libre, pas de foreign key) :
+
+| Référentiel | Entrées | Description |
+|-------------|---------|-------------|
+| [Types de plan](reference-data/referentiel-types-plan.csv) | 8 | Types de plans stratégiques connus |
+| [Programmes](reference-data/referentiel-programmes.csv) | 31 | Programmes institutionnels de rattachement |
+| [Sources de financement](reference-data/referentiel-sources-financement.csv) | 59 | Sources de financement connues |
 
 ## Relations
 
-- Les tables principales : `projets-transition-ecologique/` et `collectivites/`   sont liées par une relation many-to-many
-- Les projets font référence aux référentiels via :
-  - Le champ `competences` qui pointe vers le référentiel M57 des compétences et sous-compétences des collectivités
-  - Le champ `leviers` qui pointe vers le référentiel des leviers SGPE de la Plannification Ecologique.
+```
+Plan ──< Action ──< Opération ──< Financement
+  │         │           │
+  └─────────┴───────────┘  (N:N via tableaux d'IDs)
+```
+
+- **Plan → Action** : une action peut être rattachée à N plans (`planIds`)
+- **Action → Opération** : une opération peut concrétiser N actions (`actionIds`)
+- **Plan → Opération** : une opération peut être rattachée directement à N plans (`planIds`)
+- **Opération → Financement** : un financement est lié à 1 opération (`operationId`)
+- Les champs de classification (`competencesM57`, `leviersSgpe`, `classificationThematiques`, `classificationInfrastructures`, `classificationInterventions`) font référence aux référentiels contraignants via foreign keys
 
 ## Utilisation
 
 Ces schémas sont conçus pour être utilisés par tout service numérique qui accompagne les collectivités dans leurs projets de transition écologique, comme par exemple :
 
-- Mon Espace Collectivité (MEC)
-- Territoires Engagés pour la Transition Écologique (TET)
-- Recommandations Collaboratives (Recoco)
-- etc.
+- [Mon Espace Collectivité (MEC)](https://mon-espace-collectivite.incubateur.anct.gouv.fr/)
+- [Territoires en Transitions (TeT)](https://territoiresentransitions.fr/)
+- [API Collectivités](https://api.communs-transition-ecologique.beta.gouv.fr/)
 
 ## Format
 
@@ -51,13 +69,34 @@ Les schémas sont au format [Table Schema](https://specs.frictionlessdata.io/tab
 
 ## Contenu du dépôt
 
-- `datapackage.json` : Le descripteur principal du package de données
-- `projets-transition-ecologique/` : Contient le schéma et les exemples pour la table des projets
-- `collectivites/` : Contient le schéma et les exemples pour la table des collectivités
-- `reference-data/` : Contient les référentiels :
-  - `référentiel_competences_M57_2025.json` : Référentiel M57 des compétences / sous-compétences sour forme de JSON strucuré,avec l'arborescence
-  -  `référentiel_competences_M57_2025.csv`: Référentiel M57 des compétences / sous-compétences sour forme de csv
-  - `50_leviers_SGPE_03_2025.csv` : Référentiel des leviers SGPE de la plannification écologique sous forme de csv
+```
+├── datapackage.json                  # Descripteur du package de données
+├── plans/
+│   ├── schema.json                   # Schéma des plans
+│   └── exemple-valide.csv            # Exemple de données valides
+├── actions/
+│   ├── schema.json                   # Schéma des actions
+│   └── exemple-valide.csv
+├── operations/
+│   ├── schema.json                   # Schéma des opérations
+│   └── exemple-valide.csv
+├── financements/
+│   ├── schema.json                   # Schéma des financements
+│   └── exemple-valide.csv
+└── reference-data/
+    ├── referentiel-leviers-sgpe.csv
+    ├── referentiel-competences-m57.csv
+    ├── referentiel-classification-thematiques.csv
+    ├── referentiel-classification-infrastructures.csv
+    ├── referentiel-classification-interventions.csv
+    ├── referentiel-types-plan.csv
+    ├── referentiel-programmes.csv
+    └── referentiel-sources-financement.csv
+```
+
+## Auteurs
+
+- **Thomas Guillory** — [API Collectivités / beta.gouv.fr](https://beta.gouv.fr/)
 
 ## Licence
 

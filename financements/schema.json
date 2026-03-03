@@ -1,0 +1,103 @@
+{
+    "$schema": "https://frictionlessdata.io/schemas/table-schema.json",
+    "name": "financements",
+    "title": "Financements",
+    "description": "Ligne de financement associée à une opération. Une opération peut avoir N financements de sources différentes.",
+    "countryCode": "FR",
+    "homepage": "https://github.com/betagouv/schema-projet-collectivites-transition-ecologique",
+    "licenses": [
+        {
+            "title": "Licence Ouverte",
+            "name": "etalab-2.0",
+            "path": "https://www.etalab.gouv.fr/licence-ouverte-open-licence"
+        }
+    ],
+    "version": "v0.2.0",
+    "fields": [
+        {
+            "name": "id",
+            "title": "Identifiant",
+            "description": "Identifiant unique du financement (UUID).",
+            "example": "d4e5f6a7-b8c9-0123-def0-123456789abc",
+            "type": "string",
+            "format": "uuid",
+            "constraints": {
+                "required": true
+            }
+        },
+        {
+            "name": "operationId",
+            "title": "Opération financée",
+            "description": "Identifiant de l'opération financée (FK → operations.id).",
+            "example": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+            "type": "string",
+            "format": "uuid",
+            "constraints": {
+                "required": true
+            }
+        },
+        {
+            "name": "source",
+            "title": "Source de financement",
+            "description": "Source de financement. Texte libre — voir referentiel-sources-financement.csv pour les sources connues.",
+            "example": "Fonds Vert",
+            "type": "string",
+            "constraints": {
+                "required": true
+            }
+        },
+        {
+            "name": "referenceExterne",
+            "title": "Référence externe",
+            "description": "Identifiant externe de traçabilité (n° dossier Fonds Vert, n° EJ, n° convention...).",
+            "example": "FV-2025-44-00123",
+            "type": "string"
+        },
+        {
+            "name": "dateAttribution",
+            "title": "Date d'attribution",
+            "description": "Date de décision ou notification du financement.",
+            "example": "2025-11-15",
+            "type": "date"
+        },
+        {
+            "name": "montantDemande",
+            "title": "Montant demandé",
+            "description": "Montant demandé en euros.",
+            "example": "400000",
+            "type": "integer"
+        },
+        {
+            "name": "montantAttribue",
+            "title": "Montant attribué",
+            "description": "Montant attribué ou engagé en euros.",
+            "example": "350000",
+            "type": "integer"
+        },
+        {
+            "name": "montantPaye",
+            "title": "Montant payé",
+            "description": "Montant effectivement payé en euros.",
+            "example": "175000",
+            "type": "integer"
+        },
+        {
+            "name": "statut",
+            "title": "Statut du financement",
+            "description": "Statut courant du financement.",
+            "example": "Obtenu",
+            "type": "string",
+            "constraints": {
+                "enum": [
+                    "Prévisionnel",
+                    "Demandé",
+                    "Obtenu",
+                    "Refusé",
+                    "Payé"
+                ]
+            }
+        }
+    ],
+    "missingValues": [""],
+    "primaryKey": "id"
+}

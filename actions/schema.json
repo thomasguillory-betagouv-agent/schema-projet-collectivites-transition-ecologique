@@ -1,0 +1,137 @@
+{
+    "$schema": "https://frictionlessdata.io/schemas/table-schema.json",
+    "name": "actions",
+    "title": "Actions",
+    "description": "Expression d'une intention politique décrivant ce qu'une collectivité envisage d'entreprendre. Objet optionnel — certaines collectivités passent directement du plan à l'opération.",
+    "countryCode": "FR",
+    "homepage": "https://github.com/betagouv/schema-projet-collectivites-transition-ecologique",
+    "licenses": [
+        {
+            "title": "Licence Ouverte",
+            "name": "etalab-2.0",
+            "path": "https://www.etalab.gouv.fr/licence-ouverte-open-licence"
+        }
+    ],
+    "version": "v0.2.0",
+    "fields": [
+        {
+            "name": "id",
+            "title": "Identifiant",
+            "description": "Identifiant unique de l'action (UUID).",
+            "example": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+            "type": "string",
+            "format": "uuid",
+            "constraints": {
+                "required": true
+            }
+        },
+        {
+            "name": "nom",
+            "title": "Nom de l'action",
+            "description": "Nom de l'action.",
+            "example": "Rénover les bâtiments scolaires",
+            "type": "string",
+            "constraints": {
+                "required": true
+            }
+        },
+        {
+            "name": "description",
+            "title": "Description",
+            "description": "Description de l'action.",
+            "example": "Programme de rénovation thermique de l'ensemble des écoles de la métropole.",
+            "type": "string"
+        },
+        {
+            "name": "objectifs",
+            "title": "Objectifs",
+            "description": "Objectifs visés par l'action.",
+            "example": "Réduire de 40% la consommation énergétique des bâtiments scolaires d'ici 2028.",
+            "type": "string"
+        },
+        {
+            "name": "statut",
+            "title": "Statut",
+            "description": "Statut courant de l'action.",
+            "example": "En cours",
+            "type": "string",
+            "constraints": {
+                "enum": [
+                    "À venir",
+                    "En cours",
+                    "En retard",
+                    "En pause",
+                    "Bloqué",
+                    "Abandonné",
+                    "Terminé"
+                ]
+            }
+        },
+        {
+            "name": "competencesM57",
+            "title": "Compétences M57",
+            "description": "Codes compétences selon la nomenclature fonctionnelle M57.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "examples": ["90-211", "90-212"]
+        },
+        {
+            "name": "leviersSgpe",
+            "title": "Leviers SGPE",
+            "description": "Leviers d'action selon la nomenclature SGPE.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "examples": ["Rénovation (hors changement chaudières)", "Sobriété des bâtiments (tertiaire)"]
+        },
+        {
+            "name": "planIds",
+            "title": "Plans de rattachement",
+            "description": "Identifiants des plans auxquels l'action est rattachée (N:N).",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "examples": ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"]
+        },
+        {
+            "name": "collectiviteResponsableSiren",
+            "title": "SIREN de la collectivité responsable",
+            "description": "SIREN de la collectivité ou groupement responsable de l'action.",
+            "example": "244400404",
+            "type": "string",
+            "constraints": {
+                "pattern": "^\\d{9}$"
+            }
+        },
+        {
+            "name": "territoireCommunes",
+            "title": "Communes du territoire",
+            "description": "Codes INSEE des communes concernées par l'action.",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "constraints": {
+                    "pattern": "^\\d{5}$"
+                }
+            },
+            "examples": ["44109", "44020"]
+        },
+        {
+            "name": "classificationThematiques",
+            "title": "Classification — Thématiques",
+            "description": "Domaines thématiques de l'action (énergie, biodiversité, mobilité…). Valeurs issues du referentiel-classification-thematiques.csv.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "examples": ["Audit ou travaux de rénovation énergétique", "Sobriété énergétique"]
+        }
+    ],
+    "missingValues": [""],
+    "primaryKey": "id"
+}

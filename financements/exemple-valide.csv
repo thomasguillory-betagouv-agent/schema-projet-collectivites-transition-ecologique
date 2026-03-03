@@ -1,0 +1,9 @@
+id,operationId,source,referenceExterne,dateAttribution,montantDemande,montantAttribue,montantPaye,statut
+1151374f-e06b-4e31-8fc7-67c77c67955e,0d9d1501-c670-465b-bb01-6b0ffcf9d75d,Fonds Vert,FV-2025-44-00123,2025-11-15,400000,350000,175000,Obtenu
+8544733e-d70c-4ddf-a52c-1d912fbd6ba0,0d9d1501-c670-465b-bb01-6b0ffcf9d75d,ADEME,,2025-09-20,200000,200000,,Obtenu
+931b4f25-8d51-47fd-9a68-b7f44883a54b,0d9d1501-c670-465b-bb01-6b0ffcf9d75d,Autofinancement,,,,300000,,Prévisionnel
+366dc69e-ce9e-49f5-85d7-9c5392585770,d72feded-f04b-47cb-87c2-35d5066deb54,DETR,,,,150000,,Demandé
+02f86fde-8e35-4d8e-92a3-4597f2467c31,50715beb-9d6f-40f7-9736-0a273cddfb61,Conseil régional,,2025-07-10,400000,300000,,Obtenu
+c6e3c5d6-0559-4cda-8a47-fac32d8d7022,50715beb-9d6f-40f7-9736-0a273cddfb61,Autofinancement,,,,,450000,Payé
+4c36d66c-a977-4880-9f79-b98a1dc3a062,0d4aea07-a95b-476b-8104-591d7debadd9,ANCT,,2025-03-01,60000,55000,55000,Payé
+36f60958-92e6-4fe1-97b0-3e1f24187107,0d4aea07-a95b-476b-8104-591d7debadd9,Intercommunalité,,,,,40000,Payé

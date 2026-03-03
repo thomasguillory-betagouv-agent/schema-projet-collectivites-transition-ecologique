@@ -1,0 +1,92 @@
+{
+    "$schema": "https://frictionlessdata.io/schemas/table-schema.json",
+    "name": "plans",
+    "title": "Plans",
+    "description": "Document stratégique définissant des orientations et objectifs sur un horizon temporel (PCAET, CRTE, PAT, PLUi, roadmap locale...).",
+    "countryCode": "FR",
+    "homepage": "https://github.com/betagouv/schema-projet-collectivites-transition-ecologique",
+    "licenses": [
+        {
+            "title": "Licence Ouverte",
+            "name": "etalab-2.0",
+            "path": "https://www.etalab.gouv.fr/licence-ouverte-open-licence"
+        }
+    ],
+    "version": "v0.2.0",
+    "fields": [
+        {
+            "name": "id",
+            "title": "Identifiant",
+            "description": "Identifiant unique du plan (UUID).",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "type": "string",
+            "format": "uuid",
+            "constraints": {
+                "required": true
+            }
+        },
+        {
+            "name": "nom",
+            "title": "Nom du plan",
+            "description": "Nom du plan (ex: \"PCAET Nantes Métropole 2024-2030\").",
+            "example": "PCAET Nantes Métropole 2024-2030",
+            "type": "string",
+            "constraints": {
+                "required": true
+            }
+        },
+        {
+            "name": "type",
+            "title": "Type de plan",
+            "description": "Type de plan (PCAET, CRTE, PAT, PLUi, etc.). Texte libre — voir referentiel-types-plan.csv pour les types connus.",
+            "example": "PCAET",
+            "type": "string"
+        },
+        {
+            "name": "description",
+            "title": "Description",
+            "description": "Description du plan.",
+            "example": "Plan Climat-Air-Énergie Territorial de Nantes Métropole pour la période 2024-2030.",
+            "type": "string"
+        },
+        {
+            "name": "periodeDebut",
+            "title": "Début de période",
+            "description": "Date de début de la période couverte par le plan.",
+            "example": "2024-01-01",
+            "type": "date"
+        },
+        {
+            "name": "periodeFin",
+            "title": "Fin de période",
+            "description": "Date de fin de la période couverte par le plan.",
+            "example": "2030-12-31",
+            "type": "date"
+        },
+        {
+            "name": "collectiviteResponsableSiren",
+            "title": "SIREN de la collectivité responsable",
+            "description": "SIREN de la collectivité ou groupement responsable du plan.",
+            "example": "244400404",
+            "type": "string",
+            "constraints": {
+                "pattern": "^\\d{9}$"
+            }
+        },
+        {
+            "name": "territoireCommunes",
+            "title": "Communes du territoire",
+            "description": "Codes INSEE des communes du territoire couvert par le plan.",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "constraints": {
+                    "pattern": "^\\d{5}$"
+                }
+            },
+            "examples": ["44109", "44020", "44162"]
+        }
+    ],
+    "missingValues": [""],
+    "primaryKey": "id"
+}

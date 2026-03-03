@@ -1,61 +1,161 @@
 {
     "name": "schema-projet-collectivites-transition-ecologique",
     "title": "Schéma des projets de transition écologique des collectivités",
-    "description": "Modèle de données pour décrire les projets de transition écologique menés par les collectivités territoriales, incluant les informations sur les projets et les collectivités associées.",
+    "description": "Modèle de données interopérable pour décrire les plans, actions, opérations et financements de transition écologique des collectivités territoriales. Itération v0.2.0 introduisant 3 objets (Plan, Action, Opération), le détail des financements par source, et la suppression des IDs plateforme.",
     "id": "schema-projet-collectivites-transition-ecologique",
     "profile": "tabular-data-package",
+    "version": "v0.2.0",
+    "created": "2025-04-28T00:00:00Z",
+    "lastModified": "2026-03-03T00:00:00Z",
+    "homepage": "https://github.com/betagouv/schema-projet-collectivites-transition-ecologique",
+    "licenses": [
+        {
+            "title": "Licence Ouverte",
+            "name": "etalab-2.0",
+            "path": "https://www.etalab.gouv.fr/licence-ouverte-open-licence"
+        }
+    ],
     "resources": [
         {
-            "name": "projets-territoire",
-            "title": "Projets de collectivité",
-            "description": "Description des projets de transition écologique menés par les collectivités",
+            "name": "plans",
+            "title": "Plans",
+            "description": "Documents stratégiques définissant des orientations et objectifs sur un horizon temporel (PCAET, CRTE, PAT, PLUi...).",
             "profile": "tabular-data-resource",
-            "path": "projets-territoire/exemple-valide.csv",
-            "schema": "projets-territoire/schema.json",
+            "path": "plans/exemple-valide.csv",
+            "schema": "plans/schema.json",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8"
+        },
+        {
+            "name": "actions",
+            "title": "Actions",
+            "description": "Intentions politiques décrivant ce qu'une collectivité envisage d'entreprendre. Objet optionnel.",
+            "profile": "tabular-data-resource",
+            "path": "actions/exemple-valide.csv",
+            "schema": "actions/schema.json",
             "format": "csv",
             "mediatype": "text/csv",
             "encoding": "utf-8",
             "foreignKeys": [
                 {
-                    "fields": ["competences"],
+                    "fields": ["competencesM57"],
                     "reference": {
                         "resource": "referentiel-competences-m57",
                         "fields": ["code"]
                     }
                 },
                 {
-                    "fields": ["leviers"],
+                    "fields": ["leviersSgpe"],
                     "reference": {
                         "resource": "referentiel-leviers-sgpe",
                         "fields": ["levier"]
                     }
                 },
                 {
-                    "fields": ["collectiviteIds"],
+                    "fields": ["planIds"],
                     "reference": {
-                        "resource": "collectivites",
+                        "resource": "plans",
+                        "fields": ["id"]
+                    }
+                },
+                {
+                    "fields": ["classificationThematiques"],
+                    "reference": {
+                        "resource": "referentiel-classification-thematiques",
+                        "fields": ["label"]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "operations",
+            "title": "Opérations",
+            "description": "Projets concrets avec moyens engagés, acteurs identifiés, calendrier et livrables. Unité de gestion, pilotage et financement.",
+            "profile": "tabular-data-resource",
+            "path": "operations/exemple-valide.csv",
+            "schema": "operations/schema.json",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "foreignKeys": [
+                {
+                    "fields": ["competencesM57"],
+                    "reference": {
+                        "resource": "referentiel-competences-m57",
+                        "fields": ["code"]
+                    }
+                },
+                {
+                    "fields": ["leviersSgpe"],
+                    "reference": {
+                        "resource": "referentiel-leviers-sgpe",
+                        "fields": ["levier"]
+                    }
+                },
+                {
+                    "fields": ["planIds"],
+                    "reference": {
+                        "resource": "plans",
+                        "fields": ["id"]
+                    }
+                },
+                {
+                    "fields": ["actionIds"],
+                    "reference": {
+                        "resource": "actions",
+                        "fields": ["id"]
+                    }
+                },
+                {
+                    "fields": ["classificationThematiques"],
+                    "reference": {
+                        "resource": "referentiel-classification-thematiques",
+                        "fields": ["label"]
+                    }
+                },
+                {
+                    "fields": ["classificationInfrastructures"],
+                    "reference": {
+                        "resource": "referentiel-classification-infrastructures",
+                        "fields": ["label"]
+                    }
+                },
+                {
+                    "fields": ["classificationInterventions"],
+                    "reference": {
+                        "resource": "referentiel-classification-interventions",
+                        "fields": ["label"]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "financements",
+            "title": "Financements",
+            "description": "Lignes de financement associées aux opérations. Une opération peut avoir N financements de sources différentes.",
+            "profile": "tabular-data-resource",
+            "path": "financements/exemple-valide.csv",
+            "schema": "financements/schema.json",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "foreignKeys": [
+                {
+                    "fields": ["operationId"],
+                    "reference": {
+                        "resource": "operations",
                         "fields": ["id"]
                     }
                 }
             ]
         },
         {
-            "name": "collectivites",
-            "title": "Collectivités",
-            "description": "Description des collectivités territoriales porteuses de projets de transition écologique",
-            "profile": "tabular-data-resource",
-            "path": "collectivites/exemple-valide.csv",
-            "schema": "collectivites/schema.json",
-            "format": "csv",
-            "mediatype": "text/csv",
-            "encoding": "utf-8"
-        },
-        {
             "name": "referentiel-leviers-sgpe",
             "title": "Référentiel des leviers SGPE",
-            "description": "Liste des leviers d'action possibles",
+            "description": "Liste des 72 leviers d'action de la planification écologique (SGPE).",
             "profile": "tabular-data-resource",
-            "path": "reference-data/50_leviers_SGPE_03_2025.csv",
+            "path": "reference-data/referentiel-leviers-sgpe.csv",
             "format": "csv",
             "mediatype": "text/csv",
             "encoding": "utf-8",
@@ -80,9 +180,9 @@
         {
             "name": "referentiel-competences-m57",
             "title": "Référentiel des compétences M57",
-            "description": "Référentiel des compétences selon la nomenclature M57",
+            "description": "Référentiel des compétences selon la nomenclature fonctionnelle M57 (156 entrées).",
             "profile": "tabular-data-resource",
-            "path": "reference-data/référentiel_competences_M57_2025.csv",
+            "path": "reference-data/referentiel-competences-m57.csv",
             "format": "csv",
             "mediatype": "text/csv",
             "encoding": "utf-8",
@@ -105,6 +205,156 @@
                     }
                 ],
                 "primaryKey": ["code"]
+            }
+        },
+        {
+            "name": "referentiel-classification-thematiques",
+            "title": "Référentiel de classification — Thématiques",
+            "description": "138 labels thématiques pour la classification des opérations et actions (contraignant, FK validée).",
+            "profile": "tabular-data-resource",
+            "path": "reference-data/referentiel-classification-thematiques.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "label",
+                        "type": "string",
+                        "title": "Label",
+                        "description": "Libellé de la thématique"
+                    }
+                ],
+                "primaryKey": ["label"]
+            }
+        },
+        {
+            "name": "referentiel-classification-infrastructures",
+            "title": "Référentiel de classification — Infrastructures",
+            "description": "59 labels de types d'infrastructure pour la classification des opérations (contraignant, FK validée).",
+            "profile": "tabular-data-resource",
+            "path": "reference-data/referentiel-classification-infrastructures.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "label",
+                        "type": "string",
+                        "title": "Label",
+                        "description": "Type d'infrastructure ou de site"
+                    }
+                ],
+                "primaryKey": ["label"]
+            }
+        },
+        {
+            "name": "referentiel-classification-interventions",
+            "title": "Référentiel de classification — Interventions",
+            "description": "15 labels de types d'intervention pour la classification des opérations (contraignant, FK validée).",
+            "profile": "tabular-data-resource",
+            "path": "reference-data/referentiel-classification-interventions.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "label",
+                        "type": "string",
+                        "title": "Label",
+                        "description": "Type d'intervention"
+                    }
+                ],
+                "primaryKey": ["label"]
+            }
+        },
+        {
+            "name": "referentiel-types-plan",
+            "title": "Référentiel des types de plan",
+            "description": "8 types de plans stratégiques connus (PCAET, CRTE, PAT, PLUi…). Indicatif — pas de foreign key, le champ plans.type est en texte libre.",
+            "profile": "tabular-data-resource",
+            "path": "reference-data/referentiel-types-plan.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "code",
+                        "type": "string",
+                        "title": "Code",
+                        "description": "Code court du type de plan"
+                    },
+                    {
+                        "name": "libelle",
+                        "type": "string",
+                        "title": "Libellé",
+                        "description": "Nom complet du type de plan"
+                    },
+                    {
+                        "name": "cadre_reglementaire",
+                        "type": "string",
+                        "title": "Cadre réglementaire",
+                        "description": "Référence législative ou réglementaire"
+                    }
+                ],
+                "primaryKey": ["code"]
+            }
+        },
+        {
+            "name": "referentiel-programmes",
+            "title": "Référentiel des programmes de rattachement",
+            "description": "31 programmes institutionnels connus (Fonds Vert, Petites Villes de Demain…). Indicatif — pas de foreign key, le champ operations.programmesRattachement est en texte libre.",
+            "profile": "tabular-data-resource",
+            "path": "reference-data/referentiel-programmes.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "programme",
+                        "type": "string",
+                        "title": "Programme",
+                        "description": "Nom du programme institutionnel"
+                    },
+                    {
+                        "name": "categorie",
+                        "type": "string",
+                        "title": "Catégorie",
+                        "description": "Catégorie thématique du programme"
+                    }
+                ],
+                "primaryKey": ["programme"]
+            }
+        },
+        {
+            "name": "referentiel-sources-financement",
+            "title": "Référentiel des sources de financement",
+            "description": "59 sources de financement connues (État, collectivités, partenaires, autofinancement). Indicatif — pas de foreign key, le champ financements.source est en texte libre.",
+            "profile": "tabular-data-resource",
+            "path": "reference-data/referentiel-sources-financement.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "source",
+                        "type": "string",
+                        "title": "Source",
+                        "description": "Nom de la source de financement"
+                    },
+                    {
+                        "name": "categorie",
+                        "type": "string",
+                        "title": "Catégorie",
+                        "description": "Catégorie de la source (État & opérateurs, Collectivités locales, etc.)"
+                    }
+                ],
+                "primaryKey": ["source"]
             }
         }
     ]
