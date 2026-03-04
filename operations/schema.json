@@ -54,26 +54,28 @@
             "title": "Date de début",
             "description": "Date de début de l'opération (prévisionnelle ou effective).",
             "example": "2025-09-01",
-            "type": "date"
+            "type": "string",
+            "format": "date"
         },
         {
             "name": "dateFin",
             "title": "Date de fin",
             "description": "Date de fin de l'opération (prévisionnelle ou effective).",
             "example": "2026-12-31",
-            "type": "date"
+            "type": "string",
+            "format": "date"
         },
         {
             "name": "phase",
             "title": "Phase du cycle de vie",
             "description": "Phase du cycle de vie de l'opération.",
-            "example": "Opération",
+            "example": "Réalisation",
             "type": "string",
             "constraints": {
                 "enum": [
                     "Idée",
                     "Étude",
-                    "Opération"
+                    "Réalisation"
                 ]
             }
         },
@@ -181,6 +183,34 @@
             "examples": ["44109"]
         },
         {
+            "name": "localisationLatitude",
+            "title": "Latitude",
+            "description": "Latitude du lieu principal de l'opération (WGS 84, degrés décimaux).",
+            "example": "47.2184",
+            "type": "number"
+        },
+        {
+            "name": "localisationLongitude",
+            "title": "Longitude",
+            "description": "Longitude du lieu principal de l'opération (WGS 84, degrés décimaux).",
+            "example": "-1.5536",
+            "type": "number"
+        },
+        {
+            "name": "localisationAdresse",
+            "title": "Adresse",
+            "description": "Adresse ou description du lieu de l'opération (texte libre).",
+            "example": "12 rue du Gymnase, 44000 Nantes",
+            "type": "string"
+        },
+        {
+            "name": "localisationBanId",
+            "title": "Identifiant BAN",
+            "description": "Clé d'interopérabilité de la Base Adresse Nationale (format : code_INSEE_voie_numéro, ex : 44109_1234_00012).",
+            "example": "44109_1234_00012",
+            "type": "string"
+        },
+        {
             "name": "classificationThematiques",
             "title": "Classification — Thématiques",
             "description": "Domaines thématiques de l'opération (énergie, biodiversité, mobilité…). Valeurs issues du referentiel-classification-thematiques.csv.",
@@ -191,9 +221,9 @@
             "examples": ["Audit ou travaux de rénovation énergétique", "Isolation thermique"]
         },
         {
-            "name": "classificationInfrastructures",
-            "title": "Classification — Infrastructures",
-            "description": "Types d'infrastructure ou de site concernés par l'opération. Valeurs issues du referentiel-classification-infrastructures.csv.",
+            "name": "classificationSites",
+            "title": "Classification — Sites",
+            "description": "Types de site concernés par l'opération (bâtiment, espace naturel, infrastructure…). Valeurs issues du referentiel-classification-sites.csv.",
             "type": "array",
             "items": {
                 "type": "string"

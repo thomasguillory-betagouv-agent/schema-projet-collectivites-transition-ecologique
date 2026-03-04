@@ -5,8 +5,8 @@
     "id": "schema-projet-collectivites-transition-ecologique",
     "profile": "tabular-data-package",
     "version": "v0.2.0",
-    "created": "2025-04-28T00:00:00Z",
-    "lastModified": "2026-03-03T00:00:00Z",
+    "created": "2025-04-28",
+    "lastModified": "2026-02-25",
     "homepage": "https://github.com/betagouv/schema-projet-collectivites-transition-ecologique",
     "licenses": [
         {
@@ -115,9 +115,9 @@
                     }
                 },
                 {
-                    "fields": ["classificationInfrastructures"],
+                    "fields": ["classificationSites"],
                     "reference": {
-                        "resource": "referentiel-classification-infrastructures",
+                        "resource": "referentiel-classification-sites",
                         "fields": ["label"]
                     }
                 },
@@ -229,11 +229,11 @@
             }
         },
         {
-            "name": "referentiel-classification-infrastructures",
-            "title": "Référentiel de classification — Infrastructures",
-            "description": "59 labels de types d'infrastructure pour la classification des opérations (contraignant, FK validée).",
+            "name": "referentiel-classification-sites",
+            "title": "Référentiel de classification — Sites",
+            "description": "59 labels de types de site pour la classification des opérations (contraignant, FK validée).",
             "profile": "tabular-data-resource",
-            "path": "reference-data/referentiel-classification-infrastructures.csv",
+            "path": "reference-data/referentiel-classification-sites.csv",
             "format": "csv",
             "mediatype": "text/csv",
             "encoding": "utf-8",
@@ -243,7 +243,7 @@
                         "name": "label",
                         "type": "string",
                         "title": "Label",
-                        "description": "Type d'infrastructure ou de site"
+                        "description": "Type de site"
                     }
                 ],
                 "primaryKey": ["label"]
@@ -268,93 +268,6 @@
                     }
                 ],
                 "primaryKey": ["label"]
-            }
-        },
-        {
-            "name": "referentiel-types-plan",
-            "title": "Référentiel des types de plan",
-            "description": "8 types de plans stratégiques connus (PCAET, CRTE, PAT, PLUi…). Indicatif — pas de foreign key, le champ plans.type est en texte libre.",
-            "profile": "tabular-data-resource",
-            "path": "reference-data/referentiel-types-plan.csv",
-            "format": "csv",
-            "mediatype": "text/csv",
-            "encoding": "utf-8",
-            "schema": {
-                "fields": [
-                    {
-                        "name": "code",
-                        "type": "string",
-                        "title": "Code",
-                        "description": "Code court du type de plan"
-                    },
-                    {
-                        "name": "libelle",
-                        "type": "string",
-                        "title": "Libellé",
-                        "description": "Nom complet du type de plan"
-                    },
-                    {
-                        "name": "cadre_reglementaire",
-                        "type": "string",
-                        "title": "Cadre réglementaire",
-                        "description": "Référence législative ou réglementaire"
-                    }
-                ],
-                "primaryKey": ["code"]
-            }
-        },
-        {
-            "name": "referentiel-programmes",
-            "title": "Référentiel des programmes de rattachement",
-            "description": "31 programmes institutionnels connus (Fonds Vert, Petites Villes de Demain…). Indicatif — pas de foreign key, le champ operations.programmesRattachement est en texte libre.",
-            "profile": "tabular-data-resource",
-            "path": "reference-data/referentiel-programmes.csv",
-            "format": "csv",
-            "mediatype": "text/csv",
-            "encoding": "utf-8",
-            "schema": {
-                "fields": [
-                    {
-                        "name": "programme",
-                        "type": "string",
-                        "title": "Programme",
-                        "description": "Nom du programme institutionnel"
-                    },
-                    {
-                        "name": "categorie",
-                        "type": "string",
-                        "title": "Catégorie",
-                        "description": "Catégorie thématique du programme"
-                    }
-                ],
-                "primaryKey": ["programme"]
-            }
-        },
-        {
-            "name": "referentiel-sources-financement",
-            "title": "Référentiel des sources de financement",
-            "description": "59 sources de financement connues (État, collectivités, partenaires, autofinancement). Indicatif — pas de foreign key, le champ financements.source est en texte libre.",
-            "profile": "tabular-data-resource",
-            "path": "reference-data/referentiel-sources-financement.csv",
-            "format": "csv",
-            "mediatype": "text/csv",
-            "encoding": "utf-8",
-            "schema": {
-                "fields": [
-                    {
-                        "name": "source",
-                        "type": "string",
-                        "title": "Source",
-                        "description": "Nom de la source de financement"
-                    },
-                    {
-                        "name": "categorie",
-                        "type": "string",
-                        "title": "Catégorie",
-                        "description": "Catégorie de la source (État & opérateurs, Collectivités locales, etc.)"
-                    }
-                ],
-                "primaryKey": ["source"]
             }
         }
     ]
