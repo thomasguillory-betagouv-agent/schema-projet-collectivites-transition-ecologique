@@ -8,11 +8,11 @@
 | | Tables | Champs | Référentiels |
 |--|--------|--------|-------------|
 | v0.1.0 | 1 (`projets-territoire`) | 22 | 2 |
-| **v0.2.0** | **4** (plans, actions, operations, financements) | **51** | **8** |
+| **v0.2.0** | **4** (plans-transition, fiches-action, projets-operationnels, financements) | **51** | **8** |
 
 ### Ce qui change
 
-- **4 tables** au lieu d'1 : Plan, Action (optionnelle), Opération + Financements (détail par source)
+- **4 tables** au lieu d'1 : Plan de transition, Fiche action (optionnelle), Projet opérationnel + Financements (détail par source)
 - **Financements détaillés** : table dédiée (source, montants, statut) au lieu d'un seul `budgetPrevisionnel`
 - **IDs plateforme supprimés** du schéma (`mecId`, `tetId`, `recocoId` → gérés par l'API)
 - **Table `collectivites` supprimée** : remplacée par `collectiviteResponsableSiren` (qui décide) + `territoireCommunes` (où)
@@ -24,28 +24,28 @@
 ### Modèle relationnel
 
 ```
-plans ◇──────◇ actions ◇──────◇ operations ◇────── financements
-     planIds[]        actionIds[]            operationId
-      (N:N)             (N:N)                  (1:N)
+plans-transition ◇──────◇ fiches-action ◇──────◇ projets-operationnels ◇────── financements
+          planTransitionIds[]    ficheActionIds[]              projetOperationnelId
+                (N:N)                  (N:N)                          (1:N)
 
-plans ◇──────◇ operations
-     planIds[]
-     (N:N, raccourci)
+plans-transition ◇──────◇ projets-operationnels
+          planTransitionIds[]
+               (N:N, raccourci)
 ```
 
 ## Structure des fichiers
 
 ```
 datapackage.json
-├── plans/
+├── plans-transition/
 │   ├── schema.json          8 champs
-│   └── exemple-valide.csv   2 plans (PCAET, CRTE)
-├── actions/
+│   └── exemple-valide.csv   2 plans de transition (PCAET, CRTE)
+├── fiches-action/
 │   ├── schema.json          11 champs
-│   └── exemple-valide.csv   3 actions
-├── operations/
+│   └── exemple-valide.csv   3 fiches action
+├── projets-operationnels/
 │   ├── schema.json          23 champs
-│   └── exemple-valide.csv   4 opérations
+│   └── exemple-valide.csv   4 projets opérationnels
 ├── financements/
 │   ├── schema.json          9 champs
 │   └── exemple-valide.csv   8 lignes de financement
@@ -65,14 +65,14 @@ datapackage.json
 
 ## Tables
 
-### `plans` — 8 champs
+### `plans-transition` — 8 champs
 
-Document stratégique sur un horizon temporel (PCAET, CRTE, PAT, PLUi...).
+Document stratégique de transition écologique sur un horizon temporel (PCAET, CRTE, PAT, PLUi...).
 
 | Champ | Type | Requis | Description |
 |-------|------|--------|-------------|
 | `id` | uuid | oui | Identifiant unique |
-| `nom` | string | oui | Nom du plan |
+| `nom` | string | oui | Nom du plan de transition |
 | `type` | string | | Type (texte libre — voir referentiel-types-plan) |
 | `description` | string | | Description |
 | `periodeDebut` | date | | Début de la période couverte |
@@ -80,32 +80,32 @@ Document stratégique sur un horizon temporel (PCAET, CRTE, PAT, PLUi...).
 | `collectiviteResponsableSiren` | string | | SIREN (9 chiffres) |
 | `territoireCommunes` | string[] | | Codes INSEE (5 chiffres) |
 
-### `actions` — 11 champs
+### `fiches-action` — 11 champs
 
 Intention politique — ce qu'une collectivité envisage d'entreprendre. Objet **optionnel**.
 
 | Champ | Type | Requis | Description |
 |-------|------|--------|-------------|
 | `id` | uuid | oui | Identifiant unique |
-| `nom` | string | oui | Nom de l'action |
+| `nom` | string | oui | Nom de la fiche action |
 | `description` | string | | Description |
 | `objectifs` | string | | Objectifs visés |
 | `statut` | enum | | À venir, En cours, En retard, En pause, Bloqué, Abandonné, Terminé |
 | `competencesM57` | string[] | | Codes M57 |
 | `leviersSgpe` | string[] | | Leviers SGPE |
-| `planIds` | uuid[] | | FK → plans |
+| `planTransitionIds` | uuid[] | | FK → plans-transition |
 | `collectiviteResponsableSiren` | string | | SIREN (9 chiffres) |
 | `territoireCommunes` | string[] | | Codes INSEE (5 chiffres) |
 | `classificationThematiques` | string[] | | FK → referentiel thématiques |
 
-### `operations` — 23 champs
+### `projets-operationnels` — 23 champs
 
 Projet concret avec moyens engagés, acteurs identifiés, calendrier et livrables.
 
 | Champ | Type | Requis | Description |
 |-------|------|--------|-------------|
 | `id` | uuid | oui | Identifiant unique |
-| `nom` | string | oui | Nom de l'opération |
+| `nom` | string | oui | Nom du projet opérationnel |
 | `description` | string | | Description |
 | `budgetPrevisionnel` | integer | | Budget total en euros |
 | `dateDebut` | date | | Date de début |
@@ -117,8 +117,8 @@ Projet concret avec moyens engagés, acteurs identifiés, calendrier et livrable
 | `competencesM57` | string[] | | Codes M57 |
 | `leviersSgpe` | string[] | | Leviers SGPE |
 | `programmesRattachement` | string[] | | Programmes (texte libre — voir referentiel) |
-| `planIds` | uuid[] | | FK → plans |
-| `actionIds` | uuid[] | | FK → actions |
+| `planTransitionIds` | uuid[] | | FK → plans-transition |
+| `ficheActionIds` | uuid[] | | FK → fiches-action |
 | `territoireCommunes` | string[] | | Codes INSEE (5 chiffres) |
 | `localisationLatitude` | number | | Latitude WGS 84 (degrés décimaux) |
 | `localisationLongitude` | number | | Longitude WGS 84 (degrés décimaux) |
@@ -130,12 +130,12 @@ Projet concret avec moyens engagés, acteurs identifiés, calendrier et livrable
 
 ### `financements` — 9 champs
 
-Ligne de financement associée à une opération. Une opération peut avoir N financements.
+Ligne de financement associée à un projet opérationnel. Un projet opérationnel peut avoir N financements.
 
 | Champ | Type | Requis | Description |
 |-------|------|--------|-------------|
 | `id` | uuid | oui | Identifiant unique |
-| `operationId` | uuid | oui | FK → operations |
+| `projetOperationnelId` | uuid | oui | FK → projets-operationnels |
 | `source` | string | oui | Source (texte libre — voir referentiel) |
 | `referenceExterne` | string | | N° dossier, n° EJ, n° convention... |
 | `dateAttribution` | date | | Date de notification |
@@ -148,9 +148,9 @@ Ligne de financement associée à une opération. Une opération peut avoir N fi
 
 | Table schéma | MEC | TeT | Fonds Vert |
 |-------------|-----|-----|-----------|
-| **Plans** | `crte` (CRTE uniquement) | `axe` racines + `plan_action_type` | — |
-| **Actions** | — | Toute `fiche_action` | — |
-| **Opérations** | `projets` | `fiche_action` avec budget/financeur | `dossier` |
+| **Plans de transition** | `crte` (CRTE uniquement) | `axe` racines + `plan_action_type` | — |
+| **Fiches action** | — | Toute `fiche_action` | — |
+| **Projets opérationnels** | `projets` | `fiche_action` avec budget/financeur | `dossier` |
 | **Financements** | `ProjetsFinancements` | `fiche_action_financeur_tag` | Engagements juridiques |
 
 ## Documentation complète
@@ -158,7 +158,7 @@ Ligne de financement associée à une opération. Une opération peut avoir N fi
 - [Proposition schéma v0.2.0](../matrice/proposition-schema-v0.2.0.md) — spécification exhaustive, décisions de design, guide de nommage
 - [Matrice de correspondance](../matrice/matrice-correspondance.md) — mapping attribut par attribut entre plateformes
 - [Synthèse visuelle](../matrice/synthese-v0.2.0.html) — vue graphique du schéma (ouvrir dans un navigateur)
-- [Glossaire commun](../glossaire/glossaire-commun.md) — définitions Plan, Action, Opération
+- [Glossaire commun](../glossaire/glossaire-commun.md) — définitions Plan de transition, Fiche action, Projet opérationnel
 
 ## Licence
 

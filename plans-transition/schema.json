@@ -1,8 +1,8 @@
 {
     "$schema": "https://frictionlessdata.io/schemas/table-schema.json",
-    "name": "plans",
-    "title": "Plans",
-    "description": "Document stratégique définissant des orientations et objectifs sur un horizon temporel (PCAET, CRTE, PAT, PLUi, roadmap locale...).",
+    "name": "plans-transition",
+    "title": "Plans de transition",
+    "description": "Document stratégique définissant des orientations et objectifs de transition écologique sur un horizon temporel (PCAET, CRTE, PAT, PLUi, roadmap locale...).",
     "countryCode": "FR",
     "homepage": "https://github.com/betagouv/schema-projet-collectivites-transition-ecologique",
     "licenses": [
@@ -17,7 +17,7 @@
         {
             "name": "id",
             "title": "Identifiant",
-            "description": "Identifiant unique du plan (UUID).",
+            "description": "Identifiant unique du plan de transition (UUID).",
             "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
             "type": "string",
             "format": "uuid",
@@ -27,8 +27,8 @@
         },
         {
             "name": "nom",
-            "title": "Nom du plan",
-            "description": "Nom du plan (ex: \"PCAET Nantes Métropole 2024-2030\").",
+            "title": "Nom du plan de transition",
+            "description": "Nom du plan de transition (ex: \"PCAET Nantes Métropole 2024-2030\").",
             "example": "PCAET Nantes Métropole 2024-2030",
             "type": "string",
             "constraints": {

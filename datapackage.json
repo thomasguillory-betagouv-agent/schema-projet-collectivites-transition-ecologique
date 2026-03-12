@@ -1,7 +1,7 @@
 {
     "name": "schema-projet-collectivites-transition-ecologique",
     "title": "Schéma des projets de transition écologique des collectivités",
-    "description": "Modèle de données interopérable pour décrire les plans, actions, opérations et financements de transition écologique des collectivités territoriales. Itération v0.2.0 introduisant 3 objets (Plan, Action, Opération), le détail des financements par source, et la suppression des IDs plateforme.",
+    "description": "Modèle de données interopérable pour décrire les plans de transition, fiches action, projets opérationnels et financements de transition écologique des collectivités territoriales. Itération v0.2.0 introduisant 3 objets (Plan de transition, Fiche action, Projet opérationnel), le détail des financements par source, et la suppression des IDs plateforme.",
     "id": "schema-projet-collectivites-transition-ecologique",
     "profile": "tabular-data-package",
     "version": "v0.2.0",
@@ -17,23 +17,23 @@
     ],
     "resources": [
         {
-            "name": "plans",
-            "title": "Plans",
-            "description": "Documents stratégiques définissant des orientations et objectifs sur un horizon temporel (PCAET, CRTE, PAT, PLUi...).",
+            "name": "plans-transition",
+            "title": "Plans de transition",
+            "description": "Documents stratégiques définissant des orientations et objectifs de transition écologique sur un horizon temporel (PCAET, CRTE, PAT, PLUi...).",
             "profile": "tabular-data-resource",
-            "path": "plans/exemple-valide.csv",
-            "schema": "plans/schema.json",
+            "path": "plans-transition/exemple-valide.csv",
+            "schema": "plans-transition/schema.json",
             "format": "csv",
             "mediatype": "text/csv",
             "encoding": "utf-8"
         },
         {
-            "name": "actions",
-            "title": "Actions",
+            "name": "fiches-action",
+            "title": "Fiches action",
             "description": "Intentions politiques décrivant ce qu'une collectivité envisage d'entreprendre. Objet optionnel.",
             "profile": "tabular-data-resource",
-            "path": "actions/exemple-valide.csv",
-            "schema": "actions/schema.json",
+            "path": "fiches-action/exemple-valide.csv",
+            "schema": "fiches-action/schema.json",
             "format": "csv",
             "mediatype": "text/csv",
             "encoding": "utf-8",
@@ -53,9 +53,9 @@
                     }
                 },
                 {
-                    "fields": ["planIds"],
+                    "fields": ["planTransitionIds"],
                     "reference": {
-                        "resource": "plans",
+                        "resource": "plans-transition",
                         "fields": ["id"]
                     }
                 },
@@ -69,12 +69,12 @@
             ]
         },
         {
-            "name": "operations",
-            "title": "Opérations",
+            "name": "projets-operationnels",
+            "title": "Projets opérationnels",
             "description": "Projets concrets avec moyens engagés, acteurs identifiés, calendrier et livrables. Unité de gestion, pilotage et financement.",
             "profile": "tabular-data-resource",
-            "path": "operations/exemple-valide.csv",
-            "schema": "operations/schema.json",
+            "path": "projets-operationnels/exemple-valide.csv",
+            "schema": "projets-operationnels/schema.json",
             "format": "csv",
             "mediatype": "text/csv",
             "encoding": "utf-8",
@@ -94,16 +94,16 @@
                     }
                 },
                 {
-                    "fields": ["planIds"],
+                    "fields": ["planTransitionIds"],
                     "reference": {
-                        "resource": "plans",
+                        "resource": "plans-transition",
                         "fields": ["id"]
                     }
                 },
                 {
-                    "fields": ["actionIds"],
+                    "fields": ["ficheActionIds"],
                     "reference": {
-                        "resource": "actions",
+                        "resource": "fiches-action",
                         "fields": ["id"]
                     }
                 },
@@ -133,7 +133,7 @@
         {
             "name": "financements",
             "title": "Financements",
-            "description": "Lignes de financement associées aux opérations. Une opération peut avoir N financements de sources différentes.",
+            "description": "Lignes de financement associées aux projets opérationnels. Un projet opérationnel peut avoir N financements de sources différentes.",
             "profile": "tabular-data-resource",
             "path": "financements/exemple-valide.csv",
             "schema": "financements/schema.json",
@@ -142,9 +142,9 @@
             "encoding": "utf-8",
             "foreignKeys": [
                 {
-                    "fields": ["operationId"],
+                    "fields": ["projetOperationnelId"],
                     "reference": {
-                        "resource": "operations",
+                        "resource": "projets-operationnels",
                         "fields": ["id"]
                     }
                 }

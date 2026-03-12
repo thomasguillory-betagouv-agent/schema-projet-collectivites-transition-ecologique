@@ -1,4 +1,4 @@
-id,operationId,source,referenceExterne,dateAttribution,montantDemande,montantAttribue,montantPaye,statut
+id,projetOperationnelId,source,referenceExterne,dateAttribution,montantDemande,montantAttribue,montantPaye,statut
 1151374f-e06b-4e31-8fc7-67c77c67955e,0d9d1501-c670-465b-bb01-6b0ffcf9d75d,Fonds Vert,FV-2025-44-00123,2025-11-15,400000,350000,175000,Obtenu
 8544733e-d70c-4ddf-a52c-1d912fbd6ba0,0d9d1501-c670-465b-bb01-6b0ffcf9d75d,ADEME,,2025-09-20,200000,200000,,Obtenu
 931b4f25-8d51-47fd-9a68-b7f44883a54b,0d9d1501-c670-465b-bb01-6b0ffcf9d75d,Autofinancement,,,,300000,,Prévisionnel

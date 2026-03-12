@@ -1,8 +1,8 @@
 {
     "$schema": "https://frictionlessdata.io/schemas/table-schema.json",
-    "name": "actions",
-    "title": "Actions",
-    "description": "Expression d'une intention politique décrivant ce qu'une collectivité envisage d'entreprendre. Objet optionnel — certaines collectivités passent directement du plan à l'opération.",
+    "name": "fiches-action",
+    "title": "Fiches action",
+    "description": "Expression d'une intention politique décrivant ce qu'une collectivité envisage d'entreprendre. Objet optionnel — certaines collectivités passent directement du plan de transition au projet opérationnel.",
     "countryCode": "FR",
     "homepage": "https://github.com/betagouv/schema-projet-collectivites-transition-ecologique",
     "licenses": [
@@ -17,7 +17,7 @@
         {
             "name": "id",
             "title": "Identifiant",
-            "description": "Identifiant unique de l'action (UUID).",
+            "description": "Identifiant unique de la fiche action (UUID).",
             "example": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
             "type": "string",
             "format": "uuid",
@@ -27,8 +27,8 @@
         },
         {
             "name": "nom",
-            "title": "Nom de l'action",
-            "description": "Nom de l'action.",
+            "title": "Nom de la fiche action",
+            "description": "Nom de la fiche action.",
             "example": "Rénover les bâtiments scolaires",
             "type": "string",
             "constraints": {
@@ -38,21 +38,21 @@
         {
             "name": "description",
             "title": "Description",
-            "description": "Description de l'action.",
+            "description": "Description de la fiche action.",
             "example": "Programme de rénovation thermique de l'ensemble des écoles de la métropole.",
             "type": "string"
         },
         {
             "name": "objectifs",
             "title": "Objectifs",
-            "description": "Objectifs visés par l'action.",
+            "description": "Objectifs visés par la fiche action.",
             "example": "Réduire de 40% la consommation énergétique des bâtiments scolaires d'ici 2028.",
             "type": "string"
         },
         {
             "name": "statut",
             "title": "Statut",
-            "description": "Statut courant de l'action.",
+            "description": "Statut courant de la fiche action.",
             "example": "En cours",
             "type": "string",
             "constraints": {
@@ -88,9 +88,9 @@
             "examples": ["Rénovation (hors changement chaudières)", "Sobriété des bâtiments (tertiaire)"]
         },
         {
-            "name": "planIds",
-            "title": "Plans de rattachement",
-            "description": "Identifiants des plans auxquels l'action est rattachée (N:N).",
+            "name": "planTransitionIds",
+            "title": "Plans de transition de rattachement",
+            "description": "Identifiants des plans de transition auxquels la fiche action est rattachée (N:N).",
             "type": "array",
             "items": {
                 "type": "string",
@@ -101,7 +101,7 @@
         {
             "name": "collectiviteResponsableSiren",
             "title": "SIREN de la collectivité responsable",
-            "description": "SIREN de la collectivité ou groupement responsable de l'action.",
+            "description": "SIREN de la collectivité ou groupement responsable de la fiche action.",
             "example": "244400404",
             "type": "string",
             "constraints": {
@@ -111,7 +111,7 @@
         {
             "name": "territoireCommunes",
             "title": "Communes du territoire",
-            "description": "Codes INSEE des communes concernées par l'action.",
+            "description": "Codes INSEE des communes concernées par la fiche action.",
             "type": "array",
             "items": {
                 "type": "string",
@@ -124,7 +124,7 @@
         {
             "name": "classificationThematiques",
             "title": "Classification — Thématiques",
-            "description": "Domaines thématiques de l'action (énergie, biodiversité, mobilité…). Valeurs issues du referentiel-classification-thematiques.csv.",
+            "description": "Domaines thématiques de la fiche action (énergie, biodiversité, mobilité…). Valeurs issues du referentiel-classification-thematiques.csv.",
             "type": "array",
             "items": {
                 "type": "string"

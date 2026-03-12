@@ -1,19 +1,28 @@
 # Changelog
 
-## 0.2.0 (2026-03-03)
+## 0.2.0 (2026-03-12)
 
 Refonte majeure du modèle de données. Le schéma passe de 2 tables à 4 objets hiérarchiques.
 
-### Nouveaux objets
+### Renommages (2026-03-12)
 
-- **Plans** : documents stratégiques (PCAET, CRTE, PAT, PLUi…)
-- **Actions** : intentions politiques (objet optionnel)
-- **Opérations** : projets concrets avec moyens engagés (remplace `projets-territoire`)
+- **Plans** → **Plans de transition** (`plans-transition`)
+- **Actions** → **Fiches action** (`fiches-action`)
+- **Opérations** → **Projets opérationnels** (`projets-operationnels`)
+- Champ `planIds` → `planTransitionIds`
+- Champ `actionIds` → `ficheActionIds`
+- Champ `operationId` → `projetOperationnelId`
+
+### Nouveaux objets (2026-03-03)
+
+- **Plans de transition** : documents stratégiques (PCAET, CRTE, PAT, PLUi…)
+- **Fiches action** : intentions politiques (objet optionnel)
+- **Projets opérationnels** : projets concrets avec moyens engagés (remplace `projets-territoire`)
 - **Financements** : détail par source (montant demandé/attribué/payé, statut)
 
 ### Suppressions
 
-- Table `projets-territoire` → remplacée par `operations`
+- Table `projets-territoire` → remplacée par `projets-operationnels`
 - Table `collectivites` → SIREN porté directement sur chaque objet (`collectiviteResponsableSiren`)
 - Champs d'IDs plateforme (`mecId`, `tetId`, `recocoId`) → gérés par l'API, hors schéma
 - Champs de contact (`contact`, `email`) → supprimés (RGPD)
@@ -28,8 +37,8 @@ Refonte majeure du modèle de données. Le schéma passe de 2 tables à 4 objets
 
 ### Relations
 
-- Relations N:N via tableaux d'UUIDs (`planIds`, `actionIds`)
-- Financement 1:N lié à l'opération (`operationId`)
+- Relations N:N via tableaux d'UUIDs (`planTransitionIds`, `ficheActionIds`)
+- Financement 1:N lié au projet opérationnel (`projetOperationnelId`)
 - Foreign keys Frictionless pour les référentiels contraignants
 
 ## 0.1.0 (2025-04-28)
