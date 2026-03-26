@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema v0.2.0 — Correspondance TeT / MEC</title>
+<style>
+  :root { --blue: #000091; --red: #e1000f; --grey: #666; --light: #f6f6f6; --border: #ddd; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Marianne", system-ui, sans-serif; color: #1e1e1e; max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.5; }
+  h1 { color: var(--blue); font-size: 1.6rem; margin-bottom: .5rem; }
+  .subtitle { color: var(--grey); margin-bottom: 2rem; font-size: .95rem; }
+  h2 { color: var(--blue); font-size: 1.2rem; margin: 2rem 0 .75rem; border-bottom: 2px solid var(--blue); padding-bottom: .25rem; }
+  h3 { font-size: 1rem; margin: 1.5rem 0 .5rem; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: .85rem; }
+  th { background: var(--blue); color: white; text-align: left; padding: .5rem .6rem; font-weight: 600; }
+  td { padding: .4rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: #f0f0ff; }
+  .required { font-weight: 700; }
+  .missing { color: #999; font-style: italic; }
+  .partial { color: #b35900; }
+  .ok { color: #18753c; }
+  .tag { display: inline-block; padding: .1rem .4rem; border-radius: 3px; font-size: .75rem; font-weight: 600; }
+  .tag-ok { background: #b8fec9; color: #18753c; }
+  .tag-partial { background: #ffe8cc; color: #b35900; }
+  .tag-missing { background: #eee; color: #999; }
+  .tag-new { background: #dde5ff; color: var(--blue); }
+  .note { font-size: .8rem; color: var(--grey); margin-top: -.75rem; margin-bottom: 1rem; }
+  .legend { background: var(--light); padding: .75rem 1rem; border-radius: 4px; margin-bottom: 2rem; font-size: .85rem; }
+  .legend .tag { margin-right: .5rem; }
+  a { color: var(--blue); }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: .8rem; color: var(--grey); }
+</style>
+</head>
+<body>
+
+<h1>Correspondance Schema v0.2.0 &times; TeT &times; MEC</h1>
+<p class="subtitle">
+  Champs du <a href="https://github.com/betagouv/schema-projet-collectivites-transition-ecologique/pull/2">schema commun v0.2.0</a>
+  crois&eacute;s avec les attributs utilis&eacute;s en production sur TeT et MEC.
+</p>
+
+<div class="legend">
+  <strong>L&eacute;gende :</strong>
+  <span class="tag tag-ok">Direct</span> mapping 1:1
+  <span class="tag tag-partial">Partiel</span> mapping avec transformation
+  <span class="tag tag-missing">Absent</span> pas d'&eacute;quivalent
+  <span class="tag tag-new">Nouveau</span> champ ajout&eacute; par le schema
+</div>
+
+<!-- ============================================================ -->
+<h2>1. Plan de transition</h2>
+<p class="note">TeT : table <code>axe</code> (root = plan). MEC : table <code>crte</code> (CRTE uniquement).</p>
+
+<table>
+<thead>
+<tr><th>Champ schema</th><th>Type</th><th>Req.</th><th>TeT</th><th>MEC</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td class="required">id</td><td>uuid</td><td>oui</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>axe.id</code> (integer)</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>crte.id</code> (uuid)</td>
+  <td>TeT : entier auto-incr&eacute;ment&eacute;, conversion n&eacute;cessaire</td>
+</tr>
+<tr>
+  <td class="required">nom</td><td>string</td><td>oui</td>
+  <td><span class="tag tag-ok">Direct</span> <code>axe.nom</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>crte.nom</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td><td>string</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>plan_action_type.type</code> + <code>.categorie</code></td>
+  <td><span class="tag tag-partial">Partiel</span> implicite "CRTE"</td>
+  <td>MEC ne g&egrave;re que les CRTE</td>
+</tr>
+<tr>
+  <td>description</td><td>string</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>axe.description</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>periodeDebut</td><td>date</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td>Aucun partenaire ne stocke la p&eacute;riode du plan</td>
+</tr>
+<tr>
+  <td>periodeFin</td><td>date</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>collectiviteResponsableSiren</td><td>string</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>collectivite_id</code> &rarr; lookup SIREN</td>
+  <td><span class="tag tag-partial">Partiel</span> via communes &rarr; SIREN</td>
+  <td>Jointure n&eacute;cessaire des deux c&ocirc;t&eacute;s</td>
+</tr>
+<tr>
+  <td>territoireCommunes</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> via <code>collectivite_id</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>crte_communes[].communeCode</code></td>
+  <td>TeT : &agrave; d&eacute;river de la collectivit&eacute;</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>2. Fiche action</h2>
+<p class="note">TeT : table <code>fiche_action</code>. MEC : pas d'&eacute;quivalent (projets directement).</p>
+
+<table>
+<thead>
+<tr><th>Champ schema</th><th>Type</th><th>Req.</th><th>TeT</th><th>MEC</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td class="required">id</td><td>uuid</td><td>oui</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>fiche_action.id</code> (integer)</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td class="required">nom</td><td>string</td><td>oui</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.titre</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>description</td><td>string</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.description</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>objectifs</td><td>string</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.objectifs</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>statut</td><td>enum</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.statut</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td>Enum quasi-identique</td>
+</tr>
+<tr>
+  <td>competencesM57</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>leviersSgpe</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> via actions ECI/CAE li&eacute;es</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td>TeT utilise ses propres r&eacute;f&eacute;rentiels</td>
+</tr>
+<tr>
+  <td>planTransitionIds</td><td>uuid[]</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action_axe.axe_id</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td>Via table de jonction</td>
+</tr>
+<tr>
+  <td>collectiviteResponsableSiren</td><td>string</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>collectivite_id</code> &rarr; lookup</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>territoireCommunes</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> via <code>collectivite_id</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td></td>
+</tr>
+<tr>
+  <td>classificationThematiques</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>fiche_action_thematique</code></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td>TeT : th&eacute;matiques propres, pas le r&eacute;f&eacute;rentiel schema</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>3. Projet op&eacute;rationnel (Op&eacute;ration)</h2>
+<p class="note">
+  TeT : <code>fiche_action</code> quand budget > 0 ou financeur pr&eacute;sent. MEC : table <code>projets</code>.
+</p>
+
+<table>
+<thead>
+<tr><th>Champ schema</th><th>Type</th><th>Req.</th><th>TeT</th><th>MEC</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td class="required">id</td><td>uuid</td><td>oui</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>fiche_action.id</code> (int)</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>projets.id</code> (int) ou <code>.communsId</code> (uuid)</td>
+  <td>MEC a d&eacute;j&agrave; un champ <code>communsId</code> pour l'API</td>
+</tr>
+<tr>
+  <td class="required">nom</td><td>string</td><td>oui</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.titre</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.nom</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td>description</td><td>string</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.description</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.description</code></td>
+  <td>MEC : max 1000 caract&egrave;res</td>
+</tr>
+<tr>
+  <td>budgetPrevisionnel</td><td>integer</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.budget_previsionnel</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.budget</code></td>
+  <td>TeT : numeric. MEC : integer (euros)</td>
+</tr>
+<tr>
+  <td>dateDebut</td><td>date</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.date_debut</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.dateDebut</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td>dateFin</td><td>date</td><td>non</td>
+  <td><span class="tag tag-ok">Direct</span> <code>fiche_action.date_fin_provisoire</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.dateFin</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td>phase</td><td>enum</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.phase</code></td>
+  <td>MEC : Id&eacute;e / &Eacute;tude / Op&eacute;ration (schema = R&eacute;alisation)</td>
+</tr>
+<tr>
+  <td>phaseStatut</td><td>enum</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>fiche_action.statut</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.phaseStatut</code></td>
+  <td>TeT : enum l&eacute;g&egrave;rement diff&eacute;rent (+ "R&eacute;alis&eacute;e" / "Suspendue")</td>
+</tr>
+<tr>
+  <td>collectiviteResponsableSiren</td><td>string</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>collectivite_id</code> &rarr; SIREN</td>
+  <td><span class="tag tag-partial">Partiel</span> via communes &rarr; SIREN</td>
+  <td>Jointure n&eacute;cessaire</td>
+</tr>
+<tr>
+  <td>porteurOperationnelSiret</td><td>string</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.porteurSiret</code></td>
+  <td>TeT ne g&egrave;re pas le porteur op&eacute;rationnel</td>
+</tr>
+<tr>
+  <td>competencesM57</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.competences</code></td>
+  <td>MEC : 1&ndash;2 comp&eacute;tences obligatoires</td>
+</tr>
+<tr>
+  <td>leviersSgpe</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> via actions ECI/CAE</td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.planificationEcologiqueLeviers</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td>programmesRattachement</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.programmes</code></td>
+  <td>Fonds Vert, PVD, ACV, etc.</td>
+</tr>
+<tr>
+  <td>planTransitionIds</td><td>uuid[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> h&eacute;rit&eacute; via <code>fiche_action_axe</code></td>
+  <td><span class="tag tag-partial">Partiel</span> <code>projets.crteId</code> (1 seul)</td>
+  <td>MEC : un seul CRTE. TeT : N plans via axes</td>
+</tr>
+<tr>
+  <td>ficheActionIds</td><td>uuid[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> m&ecirc;me objet (fiche = action + projet)</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td>TeT : cr&eacute;&eacute; automatiquement (1 fiche &rarr; 1 action + 1 projet)</td>
+</tr>
+<tr>
+  <td>territoireCommunes</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> via <code>collectivite_id</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets_communes[].communeCode</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td>localisationLatitude</td><td>number</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>localisationLongitude</td><td>number</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>localisationAdresse</td><td>string</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>localisationBanId</td><td>string</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>classificationThematiques</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> th&eacute;matiques propres</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span> r&eacute;f&eacute;rentiel (auto-classifi&eacute; par l'API)</td>
+</tr>
+<tr>
+  <td>classificationSites</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span> (auto-classifi&eacute; par l'API)</td>
+</tr>
+<tr>
+  <td>classificationInterventions</td><td>string[]</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span> (auto-classifi&eacute; par l'API)</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>4. Financement</h2>
+<p class="note">
+  TeT : table <code>fiche_action_financeur_tag</code> (basique). MEC : table <code>projets_financements</code> (d&eacute;taill&eacute;).
+</p>
+
+<table>
+<thead>
+<tr><th>Champ schema</th><th>Type</th><th>Req.</th><th>TeT</th><th>MEC</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td class="required">id</td><td>uuid</td><td>oui</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>.id</code> (int)</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>.id</code> (int)</td>
+  <td></td>
+</tr>
+<tr>
+  <td class="required">projetOperationnelId</td><td>uuid</td><td>oui</td>
+  <td><span class="tag tag-ok">Direct</span> <code>.fiche_id</code></td>
+  <td><span class="tag tag-ok">Direct</span> <code>.projetId</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td class="required">source</td><td>string</td><td>oui</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>financeur_tag.nom</code> (texte libre)</td>
+  <td><span class="tag tag-ok">Direct</span> <code>.source</code> (68 options)</td>
+  <td>TeT : pas de r&eacute;f&eacute;rentiel, texte libre</td>
+</tr>
+<tr>
+  <td>referenceExterne</td><td>string</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span> (n&deg; dossier Fonds Vert, etc.)</td>
+</tr>
+<tr>
+  <td>dateAttribution</td><td>date</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>montantDemande</td><td>integer</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>montantAttribue</td><td>integer</td><td>non</td>
+  <td><span class="tag tag-partial">Partiel</span> <code>.montant_ttc</code></td>
+  <td><span class="tag tag-partial">Partiel</span> <code>.montant</code> (quand statut = Obtenu)</td>
+  <td>Les deux ont un montant unique, pas la granularit&eacute; demand&eacute;/attribu&eacute;</td>
+</tr>
+<tr>
+  <td>montantPaye</td><td>integer</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-new">Nouveau</span></td>
+</tr>
+<tr>
+  <td>statut</td><td>enum</td><td>non</td>
+  <td><span class="tag tag-missing">Absent</span></td>
+  <td><span class="tag tag-ok">Direct</span> <code>projets.statutFinancements</code></td>
+  <td>MEC : global au projet, pas par ligne. Schema : par financement</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>R&eacute;sum&eacute; de couverture</h2>
+
+<table>
+<thead>
+<tr><th>Entit&eacute;</th><th>Champs schema</th><th>TeT couverture</th><th>MEC couverture</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Plan</strong></td><td>8</td>
+  <td><span class="tag tag-ok">5/8</span> (nom, type, description, collectivit&eacute;, territoire)</td>
+  <td><span class="tag tag-partial">4/8</span> (nom, type implicite, collectivit&eacute;, territoire)</td>
+</tr>
+<tr>
+  <td><strong>Fiche action</strong></td><td>11</td>
+  <td><span class="tag tag-ok">9/11</span> (tous sauf competencesM57)</td>
+  <td><span class="tag tag-missing">0/11</span> (pas d'entit&eacute; Action dans MEC)</td>
+</tr>
+<tr>
+  <td><strong>Projet op&eacute;rationnel</strong></td><td>22</td>
+  <td><span class="tag tag-partial">11/22</span></td>
+  <td><span class="tag tag-ok">14/22</span></td>
+</tr>
+<tr>
+  <td><strong>Financement</strong></td><td>9</td>
+  <td><span class="tag tag-partial">3/9</span> (basique : id, fiche, montant)</td>
+  <td><span class="tag tag-partial">4/9</span> (id, projet, source, montant)</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Points cl&eacute;s</h3>
+<ul style="margin: .5rem 0 0 1.5rem; font-size: .9rem;">
+  <li><strong>TeT fiche_action = double r&ocirc;le</strong> : sert &agrave; la fois de Fiche action (strat&eacute;gique) et de Projet op&eacute;rationnel. L'heuristique de s&eacute;paration : <code>budget_previsionnel &gt; 0</code> ou pr&eacute;sence de financeur.</li>
+  <li><strong>MEC n'a pas de Fiche action</strong> : les projets sont directement op&eacute;rationnels.</li>
+  <li><strong>Localisation</strong> (lat/long/adresse/BAN) : absent des deux plateformes. Champ nouveau du schema.</li>
+  <li><strong>Classifications</strong> (3 axes) : nouvelles, auto-calcul&eacute;es par l'API Collectivit&eacute;s via LLM.</li>
+  <li><strong>Financement d&eacute;taill&eacute;</strong> (demand&eacute;/attribu&eacute;/pay&eacute;) : ni TeT ni MEC ne distinguent ces 3 niveaux. Apport du schema + Fonds Vert.</li>
+</ul>
+
+<footer>
+  G&eacute;n&eacute;r&eacute; le 26 mars 2026 &mdash; Schema v0.2.0 (PR #2) &times; TeT (<code>fiche_action</code> / <code>axe</code>) &times; MEC (<code>projets</code> / <code>crte</code>)
+</footer>
+
+</body>
+</html>
